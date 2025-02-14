@@ -23,7 +23,7 @@ jobs:
         # The matrix will produce one job for each configuration
         # parameter of type `arduino-platform`, in this case, it
         # is only 1.
-        arduino-platform: ["arduino:avr", "arduino:nano"]
+        arduino-platform: ["arduino:avr"]
         # This is usually optional but we need to statically define the
         # FQBN of the boards we want to test for each platform. In the
         # future the CLI might automatically detect and download the 
@@ -33,8 +33,6 @@ jobs:
           # This works like this: when the platformn is "arduino:avr",
           # the variable `fqbn` is set to "arduino:avr:uno".
           - arduino-platform: "arduino:avr"
-            fqbn: "arduino:avr:uno"
-          - arduino-platform: "arduino:nano"
             fqbn: "arduino:avr:nano"
 
 
