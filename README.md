@@ -11,3 +11,8 @@ Software to control a steampunk railway flying around with a zeppelin
 ## Schematics
 
 ![schematic](zeppelin_schem.png)
+
+
+## Connections
+
+![connections](arduino_print_connections.drawio.png)
