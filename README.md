@@ -2,7 +2,7 @@
 
 ![workflow status](https://github.com/rschuitema/zeppelin/actions/workflows/arduino.yml/badge.svg)
 
-This project is about a steampunk railway flying around with a zeppelin. The railway consists of figure 8 loop and a U shuttle track. 
+This project is about a steampunk railway flying around with a zeppelin. The railway consists of figure 8 loop and a shuttle track. 
 
 ## Operation
 The shuttle track and the figure 8 share a common rail. Therefor the trains on the shuttle track and the figure 8 loop cannot run simultaneuosly.
