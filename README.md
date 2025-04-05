@@ -1,4 +1,4 @@
-# zeppelin
+# Steampunk zeppelin
 
 ![workflow status](https://github.com/rschuitema/zeppelin/actions/workflows/arduino.yml/badge.svg)
 
@@ -34,3 +34,20 @@ The reed switches and the push button switches all switch between GND and 5V by 
 ## Connections
 
 ![connections](arduino_print_connections.drawio.png)
+
+## Software
+The operation of the trains is implemented using a state machine as shown in the diagram.
+
+![state machine](zeppelin_statemachine.drawio.png)
+
+When the power is connected or the reset button is pressed the software enters the "No trains running" state.
+In this state both the magnets are turned on so that the trains stop at the intended location and both signals are red.
+
+When the start button is pressed the software enters the "Figure 8 train running" state. The figure 8 magnet is turned of and the train starts running until it completes four laps. In the meantime, the figure 8 signal shows the number of laps. At four laps the figure 8 train stops and the software enters the "Shuttle train running" state.
+
+In this state the shuttle train magnet is turned of and the signal turns green and the shuttle train can depart.
+
+When the shuttle train arives back at its departure location the shuttle magnet is turned on, the signal becomes red, the train will stop and the software enters the "Figure 8 train running" state.
+
+When the reset button is pressed the software enters the "No train running" state.
+
