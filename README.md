@@ -28,10 +28,13 @@ The IO ports of an arduino cannot deliver that amount of current, therefor the m
 
 The reed switches and the push button switches all switch between GND and 5V by making use of the internal pull-up resistor.
 
-![schematic](zeppelin_schem.png)
+![schematic](zeppelin_schematic.png)
 
+## The print
+All the components are mounted on a circuit board as shown in the foto.
+![the print](zeppelin_print.png)
 
-## Connections
+The connections diagram shows how to connect the magnets, leds aand switches.
 
 ![connections](arduino_print_connections.drawio.png)
 
@@ -51,3 +54,14 @@ When the shuttle train arives back at its departure location the shuttle magnet 
 
 When the reset button is pressed the software enters the "No train running" state.
 
+
+## The tools
+
+The following tools are used:
+* draw.io for the diagrams
+* fritzing for the schematics
+* arduino ide for the source code
+
+The diagrams are made in draw.io and are stored as a .png file that also contains the instructions on how the diagram is made. This makes is possible to edit the image with draw.io while it can be shown with any other tools that can show an png image.
+
+Downloading the code to the arduino you need to select to correct bootloader. If the code cannot be downloaded try to select the old boatloader.
