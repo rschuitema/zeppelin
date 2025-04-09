@@ -12,7 +12,7 @@ The intended operation is that the figure 8 train will complete 4 loops and than
 The trains are running on battery power. They have a reed switch that can be activated by a magnet. If activated the train will stop. The train also has a magnet that can activate a reed switch on the track.
 
 Furthermore there is a signal for each of the tracks.
-The figure 8 signal "counts" the number of loops the train made.
+The figure 8 signal "counts" the number of loops the train made. For the first lap one green led is on, the second lap two green leds are on. the third lap three green leds are on. The fourth lap the green leds are off and the red led turns on.
 
 To control this operation an arduino is used.
 
@@ -58,9 +58,9 @@ When the reset button is pressed the software enters the "No train running" stat
 ## The tools
 
 The following tools are used:
-* draw.io for the diagrams
-* fritzing for the schematics
-* arduino ide for the source code
+* [draw.io](https://app.diagrams.net/) for the diagrams
+* [fritzing](https://fritzing.org/) for the schematics
+* [arduino ide](https://www.arduino.cc/en/software) for the source code
 
 The diagrams are made in draw.io and are stored as a .png file that also contains the instructions on how the diagram is made. This makes is possible to edit the image with draw.io while it can be shown with any other tools that can show an png image.
 
