@@ -12,7 +12,10 @@ const int SHUTTLE_LED_GREEN = 5;
 const int SHUTTLE_MAGNET = 4;
 const int SHUTTLE_REED_SWITCH = 3;
 
-const int START_BUTTON = 2;
+const int FIGURE8_START_BUTTON = 2;
+const int SHUTTLE_START_BUTTON = A0;
+
+const int TWO_MINUTES = 10*1000;
 
 void setFigure8Leds(int mode) {
   switch (mode)
@@ -102,6 +105,47 @@ void turnOffShuttleMagnet() {
     digitalWrite(SHUTTLE_MAGNET, LOW);
 }
 
+
+unsigned long startTime = 0;
+bool timerOn = false;
+bool startedByTimer = false;
+
+void turnOffTimer()
+{
+  Serial.println("Turn off timer");
+  timerOn = false;
+}
+
+void turnOnTimer()
+{
+  Serial.println("Turn on timer");
+  timerOn = true;
+  startTime = millis();
+}
+
+// function that determines if the timer is expired
+bool timerExpired()
+{
+  if (timerOn)
+  {
+    unsigned long delta = millis() - startTime;
+    if (delta > TWO_MINUTES)
+    {
+      startedByTimer = true;
+      return true;
+    }
+    else
+    {
+      startedByTimer = false;
+      return false;
+    }
+  }
+  return false;
+}
+
+
+
+
 int figure8ReedSwitchState = 0;
 int lastFigure8ReedSwitchState = 0;
 int figure8LapCounter = 0;
@@ -180,8 +224,11 @@ void setup()
   //initialize the reed switch input for the shuttle using an internal pull up resistor
   pinMode(SHUTTLE_REED_SWITCH, INPUT_PULLUP);
 
-  // initialize the input for the start button
-  pinMode(START_BUTTON, INPUT_PULLUP);
+  // initialize the input for the figure 8 start button
+  pinMode(FIGURE8_START_BUTTON, INPUT_PULLUP);
+
+  // initialize the input for the shuttle start button
+  pinMode(SHUTTLE_START_BUTTON, INPUT_PULLUP);
 
   // initialize serial communication
   Serial.begin(9600);
@@ -193,7 +240,10 @@ void setup()
   setFigure8Leds(4);
 
   //turn on red led of shuttle signal post
-  setShuttleLeds(3);  // red led is on
+  setShuttleLeds(3);
+
+  turnOnTimer();
+  Serial.println("Goto Idle");
 }
 
 typedef enum 
@@ -213,13 +263,41 @@ void loop()
   {
     case TRAIN_NONE:
     {
-      int start = digitalRead(START_BUTTON);
-      if (start == 0)
+      // Serial.println("Train None: ");
+      int startFigure8 = digitalRead(FIGURE8_START_BUTTON);
+      int startShuttle = digitalRead(SHUTTLE_START_BUTTON);
+
+      if (startFigure8 == 0)
       {
+        Serial.println("Start Figure8");
+        turnOffTimer();
+        turnOnShuttleMagnet();
         turnOffFigure8Magnet();
         figure8LapCounter = 1;
+        startedByTimer = false;
         currentTrain = TRAIN_FIGURE8;
       }
+      else if (startShuttle == 0)
+      {
+        Serial.println("Start Shuttle");
+        turnOffTimer();
+        turnOnFigure8Magnet();
+        turnOffShuttleMagnet();
+        figure8LapCounter = 0;
+        shuttleLapCounter = 1;
+        startedByTimer = false;
+        currentTrain = TRAIN_SHUTTLE;
+      }
+      else if (timerExpired())
+      {
+        Serial.println("Timer expired");        
+        turnOffTimer();
+        turnOnShuttleMagnet();
+        turnOffFigure8Magnet();
+        figure8LapCounter = 1;
+        startedByTimer = true;
+        currentTrain = TRAIN_FIGURE8;        
+      }      
       break;
     }
     case TRAIN_FIGURE8:
@@ -231,27 +309,41 @@ void loop()
       if (figure8LapCounter == 4)
       {
         turnOnFigure8Magnet();
-        turnOffShuttleMagnet();
-        figure8LapCounter = 0;
-        shuttleLapCounter = 1;
-        currentTrain = TRAIN_SHUTTLE;
+        figure8LapCounter = 0;        
+        if (startedByTimer == true)
+        {
+          Serial.println("Wait 3 seconds before shuttle trains departs");
+          delay(3000);
+          turnOffShuttleMagnet();
+          shuttleLapCounter = 1;
+          currentTrain = TRAIN_SHUTTLE;
+          Serial.println("Start Shuttle");
+        }
+        else
+        {
+          turnOnTimer();
+          currentTrain = TRAIN_NONE;
+          Serial.println("Goto Idle");
+        }
       }
+      
       break;
     }
     case TRAIN_SHUTTLE:
     {
       shuttleLapCounter = countShuttleLaps();
-      // Serial.print("Shuttle : ");
+      // Serial.print("Shuttle: ");
       // Serial.println(shuttleLapCounter);
       setShuttleLeds(shuttleLapCounter);
       if (shuttleLapCounter == 3)
       {
         turnOnShuttleMagnet();
-        turnOffFigure8Magnet();
+        turnOnTimer();
         shuttleLapCounter = 0;
-        figure8LapCounter = 1;
-        currentTrain = TRAIN_FIGURE8;
+        currentTrain = TRAIN_NONE;
+        Serial.println("Goto Idle");
       }
+      break;
     }
     default:
     {
