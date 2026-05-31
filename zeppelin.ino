@@ -15,7 +15,7 @@ const int SHUTTLE_REED_SWITCH = 3;
 const int FIGURE8_START_BUTTON = 2;
 const int SHUTTLE_START_BUTTON = A0;
 
-const int TWO_MINUTES = 10*1000;
+const int TWO_MINUTES = 2*60*1000;
 
 void setFigure8Leds(int mode) {
   switch (mode)
