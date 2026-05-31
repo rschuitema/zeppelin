@@ -322,6 +322,7 @@ void loop()
         else
         {
           turnOnTimer();
+          turnOnShuttleMagnet();
           currentTrain = TRAIN_NONE;
           Serial.println("Goto Idle");
         }
