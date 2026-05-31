@@ -1,5 +1,7 @@
 # Steampunk zeppelin
 
+![workflow status](https://github.com/rschuitema/zeppelin/actions/workflows/arduino.yml/badge.svg)
+
 This project is about a steampunk railway attraction flying around with a zeppelin. The railway consists of figure 8 loop and a shuttle track. 
 
 ## Operation
