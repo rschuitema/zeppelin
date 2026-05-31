@@ -1,0 +1,22 @@
+name: Compile Arduino Sketches
+
+on:
+  # Triggers the workflow on push or pull request only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  compile-sketches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1.1.2
+        with:
+          fbqn: arduino:avr:nano
+          sketch-paths: |
+            - .
