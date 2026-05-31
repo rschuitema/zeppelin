@@ -2,14 +2,16 @@
 
 ![workflow status](https://github.com/rschuitema/zeppelin/actions/workflows/arduino.yml/badge.svg)
 
-This project is about a steampunk railway flying around with a zeppelin. The railway consists of figure 8 loop and a shuttle track. 
+This project is about a steampunk railway attraction flying around with a zeppelin. The railway consists of figure 8 loop and a shuttle track. 
 
 ## Operation
 The shuttle track and the figure 8 share a common rail. Therefor the trains on the shuttle track and the figure 8 loop cannot run simultaneuosly.
 
-The intended operation is that the figure 8 train will complete 4 loops and than stops in order to allow the shuttle train to go back and forth. When the shuttle train is back it stops and the whole sequence repeats endlessly.
+The figure 8 train can be started by pressing a button. It will then complete 4 loops and stop. The Shuttle train can be started by pressing a different button. It will then go back and forth.
 
-The trains are running on battery power. They have a reed switch that can be activated by a magnet. If activated the train will stop. The train also has a magnet that can activate a reed switch on the track.
+When either of the buttons are not pressed for 3 minutes the figure8 train will start and complete 4 loops. After the figure8 train completed the 4 loops the shuttle train will wait for 3 seconds and then go back and forth.
+
+The trains are running on PWM power. They have a reed switch that can be activated by a magnet. If activated the train will stop. The train also has a magnet that can activate a reed switch on the track.
 
 Furthermore there is a signal for each of the tracks.
 The figure 8 signal "counts" the number of loops the train made. For the first lap one green led is on, the second lap two green leds are on. the third lap three green leds are on. The fourth lap the green leds are off and the red led turns on.
@@ -43,23 +45,19 @@ The operation of the trains is implemented using a state machine as shown in the
 
 ![state machine](zeppelin_statemachine.drawio.png)
 
-When the power is connected or the reset button is pressed the software enters the "No trains running" state.
-In this state both the magnets are turned on so that the trains stop at the intended location and both signals are red.
+When the power is connected the software enters the "No trains running" state and starts a timer. In this state both the magnets are turned on so that the trains stop at the intended location and both signals are red.
 
-When the start button is pressed the software enters the "Figure 8 train running" state. The figure 8 magnet is turned of and the train starts running until it completes four laps. In the meantime, the figure 8 signal shows the number of laps. At four laps the figure 8 train stops and the software enters the "Shuttle train running" state.
+When the Figure8 start button is pressed the software enters the "Figure 8 train running" state. The figure 8 magnet is turned of and the train starts running until it completes four laps. In the meantime, the figure 8 signal shows the number of laps. At four laps the figure 8 train stops. If the Figure8 start button started all this the software will go back to the "No trains running" state. 
 
-In this state the shuttle train magnet is turned of and the signal turns green and the shuttle train can depart.
 
-When the shuttle train arives back at its departure location the shuttle magnet is turned on, the signal becomes red, the train will stop and the software enters the "Figure 8 train running" state.
-
-When the reset button is pressed the software enters the "No train running" state.
+When the Shuttle start button is pressed the software enters the "Shuttle train running" state. In this state the shuttle train magnet is turned of and the signal turns green and the shuttle train can depart. When the shuttle train arives back at its departure location the shuttle magnet is turned on, the signal becomes red, the train will stop and the software enters the "Figure 8 train running" state.
 
 
 ## The tools
 
 The following tools are used:
 * [draw.io](https://app.diagrams.net/) for the diagrams
-* [fritzing](https://fritzing.org/) for the schematics
+* [kicad](https://www.kicad.org//) for the schematics
 * [arduino ide](https://www.arduino.cc/en/software) for the source code
 
 The diagrams are made in draw.io and are stored as a .png file that also contains the instructions on how the diagram is made. This makes is possible to edit the image with draw.io while it can be shown with any other tools that can show an png image.
